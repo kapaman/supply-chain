@@ -6,9 +6,9 @@
   "dependencies": {
     "@truffle/hdwallet-provider": "^2.0.10",
     "react-scripts": "^5.0.1",
+    "styled-components": "^5.3.6",
     "truffle-hdwallet-provider": "^1.0.17"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "truffle test"
   },
