@@ -81,6 +81,28 @@ const App = () => {
         .from("Status")
         .update({ status: "delivered" })
         .eq("id", index);
+      const deliverItem = status[1].keys.filter((el) => el.id == index);
+      deliverItem.status = "delivered";
+      const updatedSoldKeys = status[1].keys.filter((el) => el.id != index);
+      const updatedStatus = [
+        {
+          name: "Created",
+          keys: [...status[0].keys],
+          records: status[0].keys.length,
+        },
+        {
+          name: "Sold",
+          keys: updatedSoldKeys,
+          records: updatedSoldKeys.length,
+        },
+        {
+          name: "Delivered",
+          keys: [...status[2].keys, ...deliverItem],
+          records: status[2].keys.length + 1,
+        },
+      ];
+      console.log(updatedStatus);
+      setStatus(updatedStatus);
     } catch (error) {
       console.error(error);
     }
@@ -102,6 +124,18 @@ const App = () => {
       };
 
       await supabase.from("Status").insert(newItem);
+      const updatedCreateStatusKeys = [...status[0].keys, newItem];
+      const updatedStatus = status.map((el) =>
+        el.name == "Created"
+          ? {
+              ...el,
+              keys: updatedCreateStatusKeys,
+            }
+          : el
+      );
+      updatedStatus[0].records = updatedStatus[0].keys.length;
+      console.log(updatedStatus);
+      setStatus(updatedStatus);
       alert(
         "Send " +
           price +
@@ -138,7 +172,7 @@ const App = () => {
         console.log(item);
         console.log("alert1");
         alert("Item " + item._identifier + " was paid, deliver it now!");
-        setPending("Deliver item " + item._itemIndex + " to it's buyer now!");
+        setPending("Deliver item " + item._identifier + " to it's buyer now!");
       }
       if (evt.returnValues._step == 2) {
         let item = await itemMan.methods
